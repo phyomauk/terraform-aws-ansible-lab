@@ -8,9 +8,13 @@ variable "vpc_cidr" {
 
 variable "my_ip" {
   description = "your home ip address"
-  default     = "47.152.151.252/32"
 }
 
 variable "ec2-public-key" {
   description = "ssh public key name"
+}
+
+variable "site_domain" {
+  description = "your site domain, not top level name"
+  default     = "*.phyomauk.click"
 }
