@@ -1,0 +1,23 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-west-1  # Replace with your AWS Region
+
+# Filter instances by tag key/value
+filters:
+  instance-state-name: running
+
+# Group instances based on AWS Tags
+keyed_groups:
+  - key: tags.Role
+    prefix: role
+
+
+# Set the private IP as the ansible_host for management
+compose:
+  ansible_host: private_ip_address
+
+# Inject Bastion JumpHost routing dynamically using the Bastion's public IP
+  ansible_ssh_common_args: >-
+    "-o StrictHostKeyChecking=no 
+     -o UserKnownHostsFile=/dev/null 
+     -o ProxyCommand='ssh -W %h:%p -q ubuntu@18.144.213.7' +"

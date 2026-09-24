@@ -99,29 +99,37 @@ resource "aws_security_group" "bastion" {
   }
 
   egress {
-    description = "Allow outbound SSH to private subnets"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.vpc_cidr]
-  }
-
-  # Allow outbound internet access for OS patches and package installations (Ansible collections, apt/yum updates)
-  egress {
-    description = "Allow outbound HTTPS for updates"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
+    description = "Allow all outbound to anywhere"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  egress {
-    description = "Allow outbound HTTP for package downloads"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  # egress {
+  #   description = "Allow outbound SSH to private subnets"
+  #   from_port   = 22
+  #   to_port     = 22
+  #   protocol    = "tcp"
+  #   cidr_blocks = [var.vpc_cidr, var.my_ip]
+  # }
+
+  # # Allow outbound internet access for OS patches and package installations (Ansible collections, apt/yum updates)
+  # egress {
+  #   description = "Allow outbound HTTPS for updates"
+  #   from_port   = 443
+  #   to_port     = 443
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
+
+  # egress {
+  #   description = "Allow outbound HTTP for package downloads"
+  #   from_port   = 80
+  #   to_port     = 80
+  #   protocol    = "tcp"
+  #   cidr_blocks = ["0.0.0.0/0"]
+  # }
 
   tags = {
     Name = "bastion-sg"

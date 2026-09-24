@@ -27,6 +27,8 @@ resource "aws_instance" "bastion" {
 
   tags = {
     Name = "${var.project_name}-bastion"
+    Role = "bastion"
+    Environment = "lab"
   }
 }
 
@@ -41,6 +43,8 @@ resource "aws_instance" "frontend" {
 
   tags = {
     Name = "${var.project_name}-frontend-${count.index + 1}"
+    Role = "webservers"
+    Environment = "lab"
   }
 }
 
@@ -54,5 +58,7 @@ resource "aws_instance" "db" {
 
   tags = {
     Name = "${var.project_name}-mysql-db"
+    Role = "dbservers"
+    Environment = "lab"
   }
 }
