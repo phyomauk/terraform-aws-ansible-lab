@@ -1,0 +1,5 @@
+## verify the dynamic inventory discovery
+ansible-inventory -i inventory/aws_ec2.yml --graph
+
+## Run Ansible ping module
+ansible role_webservers:role_dbservers -m ping
