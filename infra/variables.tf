@@ -11,12 +11,13 @@ variable "vpc_cidr" {
   default = "10.10.0.0/16"
 }
 
-variable "my_ip" {
+variable "my_ips" {
   description = "your home ip address"
+  type = list(string)
 }
 
 variable "ec2-public-key" {
-  description = "ssh public key name"
+  description = "ec2 key paris name"
 }
 
 variable "site_domain" {

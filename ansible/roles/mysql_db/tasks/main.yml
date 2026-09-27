@@ -1,72 +1,84 @@
 ---
-# tasks file for mysql_db    
-- name: Install MySQL database
-  apt:
+# tasks file for mysql_db
+
+- name: Install MySQL server packages
+  ansible.builtin.apt:
     name:
       - mysql-server
       - mysql-client
     state: present
-  become: yes
+    update_cache: true
 
-- name: Ensure MySQL bind-address settings are present in /etc/mysql/my.cnf
-  blockinfile:
-    path: /etc/mysql/my.cnf
+- name: Ensure MySQL configuration directory exists
+  ansible.builtin.file:
+    path: /etc/mysql/mysql.conf.d
+    state: directory
+    mode: '0755'
+
+- name: Configure MySQL bind-address and native password plugin support
+  ansible.builtin.blockinfile:
+    path: /etc/mysql/mysql.conf.d/mysqld.cnf
     block: |
-      [mysqld]
       bind-address = 0.0.0.0
       mysqlx-bind-address = 0.0.0.0
-    create: yes
-  become: yes
+      mysql_native_password = ON
+      innodb_buffer_pool_size = 128M
+      max_connections = 50
+    marker: "# {mark} ANSIBLE MANAGED BIND CONFIG"
+    create: true
+  notify: Restart mysql
 
-- name: Start MySQL service
-  shell: mysqld_safe &
+- name: Ensure MySQL service is enabled and started
+  ansible.builtin.service:
+    name: mysql
+    state: started
+    enabled: true
 
-- name: Wait for MySQL to be ready
-  shell: |
-    until mysqladmin ping --silent; do
-      sleep 2
-    done
-  args:
-    executable: /bin/bash
-  become: yes
+- name: Flush handlers to apply MySQL configuration before user creation
+  ansible.builtin.meta: flush_handlers
 
-- name: Create MariaDB admin user for Ansible
-  mysql_user:
+- name: Wait for MySQL port 3306 to be ready
+  ansible.builtin.wait_for:
+    host: 127.0.0.1
+    port: 3306
+    timeout: 30
+
+- name: Create admin user for Ansible management
+  community.mysql.mysql_user:
     name: "{{ db_admin_user }}"
     password: "{{ db_admin_password }}"
     host: "%"
     priv: "*.*:ALL,GRANT"
+    plugin: mysql_native_password
     state: present
     login_user: root
     login_unix_socket: /var/run/mysqld/mysqld.sock
     column_case_sensitive: false
-  become: yes
 
-- name: Create database
-  mysql_db:
+- name: Create application database
+  community.mysql.mysql_db:
     name: "{{ db_name }}"
     state: present
-    login_user: "{{ db_admin_user }}"
-    login_password: "{{ db_admin_password }}"
-  become: yes
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
 
-- name: Create DB user
-  mysql_user:
+- name: Create application database user
+  community.mysql.mysql_user:
     name: "{{ db_user }}"
     password: "{{ db_password }}"
     priv: "{{ db_name }}.*:ALL"
     host: "%"
+    plugin: caching_sha2_password
     state: present
-    login_user: "{{ db_admin_user }}"
-    login_password: "{{ db_admin_password }}"
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
     column_case_sensitive: false
-  become: yes
 
 - name: Create employees table
-  mysql_query:
-    login_user: "{{ db_user }}"
-    login_password: "{{ db_password }}"
-    login_db: employee_db
+  community.mysql.mysql_query:
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_db: "{{ db_name }}"
     query: |
       CREATE TABLE IF NOT EXISTS employees (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -74,20 +86,15 @@
         position VARCHAR(100),
         salary INT
       );
-  become: yes
 
-- name: Insert sample data
-  mysql_query:
-    login_user: "{{ db_user }}"
-    login_password: "{{ db_password }}"
-    login_db: employee_db
+- name: Insert sample data into employees table
+  community.mysql.mysql_query:
+    login_user: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    login_db: "{{ db_name }}"
     query: |
       INSERT INTO employees (name, position, salary)
       SELECT * FROM (SELECT 'Alice', 'Engineer', 90000) AS tmp
       WHERE NOT EXISTS (
         SELECT 1 FROM employees WHERE name='Alice'
       );
-  become: yes
-
-
-

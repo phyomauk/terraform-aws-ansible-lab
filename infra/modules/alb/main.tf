@@ -19,7 +19,7 @@ resource "aws_lb_target_group" "frontend" {
   health_check {
     path                = "/"
     protocol            = "HTTP"
-    matcher             = "200"
+    matcher             = "200,301"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
@@ -46,6 +46,14 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
+}
+
+# Add traget group attachment
+resource "aws_lb_target_group_attachment" "web" {
+  count            = length(var.web_instance_ids) # Or static instance_id
+  target_group_arn = aws_lb_target_group.frontend.arn
+  target_id        = var.web_instance_ids[count.index]
+  port             = 80
 }
 
 # HTTPS Listener - Terminates SSL and forwards traffic to the target group

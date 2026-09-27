@@ -1,16 +1,18 @@
-from flask import Flask
+import os
 import socket
+from flask import Flask
 import pymysql
 
 app = Flask(__name__)
 
 def get_connection():
     return pymysql.connect(
-        host='db01',
-        user='db_user',
-        password='Passw0rd',
-        database='employee_db',
-        cursorclass=pymysql.cursors.DictCursor
+        host=os.getenv('DB_HOST', '10.10.20.152'),  # Fallback to private IP if env var is unset
+        user=os.getenv('DB_USER', 'db_user'),
+        password=os.getenv('DB_PASSWORD', 'Passw0rd'),
+        database=os.getenv('DB_NAME', 'employee_db'),
+        cursorclass=pymysql.cursors.DictCursor,
+        connect_timeout=5
     )
 
 @app.route("/")

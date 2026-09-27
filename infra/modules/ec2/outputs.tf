@@ -12,3 +12,7 @@ output "db_private_ip" {
   value       = aws_instance.db.private_ip
   description = "Private IP of the MySQL database server"
 }
+
+output "web_instance_ids" {
+  value = aws_instance.frontend[*].id
+}

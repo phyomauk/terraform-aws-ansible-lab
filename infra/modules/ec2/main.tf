@@ -56,9 +56,24 @@ resource "aws_instance" "db" {
   vpc_security_group_ids = [var.db_sg_id]
   key_name               = var.key_name
 
+  user_data = <<-EOF
+              #!/bin/bash
+              # Create a 2GB swap file to prevent memory thrashing on t3.micro
+              if [ ! -f /swapfile ]; then
+                fallocate -l 2G /swapfile || dd if=/dev/zero of=/swapfile bs=1M count=2048
+                chmod 600 /swapfile
+                mkswap /swapfile
+                swapon /swapfile
+                echo '/swapfile none swap sw 0 0' >> /etc/fstab
+              fi
+              EOF
+
+  # Ensure swap is created before Terraform considers the instance ready
+  user_data_replace_on_change = true
+
   tags = {
-    Name = "${var.project_name}-mysql-db"
-    Role = "dbservers"
+    Name        = "${var.project_name}-mysql-db"
+    Role        = "dbservers"
     Environment = "lab"
   }
 }

@@ -1,6 +1,13 @@
 - 
+  name: Gather facts from all hosts
+  hosts: 
+    - role_webservers
+    - role_dbservers
+  gather_facts: true
+
+-
   name: Deploy a mysql DB
-  hosts: database_servers
+  hosts: role_dbservers
   become: yes
   roles: 
     - python
@@ -8,7 +15,7 @@
 
 - 
   name: Deploy two web servers
-  hosts: web_servers
+  hosts: role_webservers
   become: yes
   roles: 
     - python

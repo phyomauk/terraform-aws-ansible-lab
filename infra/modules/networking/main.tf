@@ -123,6 +123,32 @@ resource "aws_route_table" "private" {
   }
 }
 
+#####################################
+# Database subnet route table
+#####################################
+# 1. Route Table for Private / Database Subnets
+resource "aws_route_table" "db" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat.id # Reference your NAT Gateway resource
+  }
+
+  tags = {
+    Name = "${var.project_name}-db-rt"
+  }
+}
+
+# 2. Associate Route Table with Database Subnets
+resource "aws_route_table_association" "db" {
+  for_each = aws_subnet.db
+
+  subnet_id      = each.value.id
+  route_table_id = aws_route_table.db.id
+}
+
+
 resource "aws_route_table_association" "private_assoc" {
   for_each       = aws_subnet.private
   subnet_id      = each.value.id

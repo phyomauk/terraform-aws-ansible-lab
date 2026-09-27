@@ -1,20 +1,21 @@
 ---
 # tasks file for python
-- name: Install Python dependencies
-  apt:
+
+- name: Install Python environment and PyMySQL driver
+  ansible.builtin.apt:
     name:
       - python3
       - python3-setuptools
       - python3-dev
       - build-essential
+      - python3-pymysql
+      - python3-flask
+      - python3-gunicorn
     state: present
-    update_cache: yes
-  become: yes
-
-- name: Install PyMySQL
-  apt:
-    name: python3-pymysql
-    state: present
-  become: yes
+    update_cache: true
+  register: apt_install_result
+  retries: 5
+  delay: 10
+  until: apt_install_result is succeeded
 
 

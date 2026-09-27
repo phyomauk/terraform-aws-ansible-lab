@@ -10,3 +10,6 @@ ansible_ssh_common_args: >-
   -o UserKnownHostsFile=/dev/null
   -o ProxyCommand="ssh -W %h:%p -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -q ubuntu@{{ bastion_ip }}"
   {% endif %}
+
+
+

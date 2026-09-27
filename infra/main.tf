@@ -10,7 +10,7 @@ module "sg" {
   source       = "./modules/sg"
   vpc_id       = module.networking.vpc_id
   project_name = var.project_name
-  my_ip        = var.my_ip
+  my_ips       = var.my_ips
   vpc_cidr     = var.vpc_cidr
 }
 
@@ -34,6 +34,7 @@ module "alb" {
   vpc_id            = module.networking.vpc_id
   public_subnet_ids = module.networking.public_subnet_ids
   alb_sg_id         = module.sg.alb_sg_id
+  web_instance_ids  = module.ec2.web_instance_ids
   certificate_arn   = module.parameter_store.certificate_arn
 }
 

@@ -1,2 +1,7 @@
 ---
-# handlers file for webserver
+# roles/webservers/handlers/main.yml
+
+- name: Restart nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
