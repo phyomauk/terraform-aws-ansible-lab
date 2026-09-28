@@ -12,7 +12,7 @@ variable "vpc_cidr" {
 }
 
 variable "my_ips" {
-  description = "your home ip address"
+  description = "ansible controller IP address"
   type = list(string)
 }
 
