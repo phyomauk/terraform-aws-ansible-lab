@@ -26,8 +26,8 @@ resource "aws_instance" "bastion" {
   key_name                    = var.key_name
 
   tags = {
-    Name = "${var.project_name}-bastion"
-    Role = "bastion"
+    Name        = "${var.project_name}-bastion"
+    Role        = "bastion"
     Environment = "lab"
   }
 }
@@ -42,8 +42,8 @@ resource "aws_instance" "frontend" {
   key_name               = var.key_name
 
   tags = {
-    Name = "${var.project_name}-frontend-${count.index + 1}"
-    Role = "webservers"
+    Name        = "${var.project_name}-frontend-${count.index + 1}"
+    Role        = "webservers"
     Environment = "lab"
   }
 }

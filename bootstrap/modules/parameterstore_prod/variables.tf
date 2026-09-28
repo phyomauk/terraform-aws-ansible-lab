@@ -1,5 +1,5 @@
 variable "project_name" {
-  default = "phyo-web-application"
+
 }
 
 variable "hosted_zone_id" {
@@ -40,4 +40,13 @@ variable "state_bucket_name" {
 
 variable "state_bucket_key" {
 
+}
+
+variable "ec2-public-key" {
+  description = "ec2 public key name"
+}
+
+variable "my_ips" {
+  type = list(string)
+  description = "a list of cidr range"
 }

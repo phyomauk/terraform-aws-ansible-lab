@@ -80,7 +80,7 @@ resource "aws_iam_policy" "codebuild_policy" {
         ]
         Resource = "*"
       }
-  
+
       ############################################
       # Allow read ssm parameter store
       ############################################

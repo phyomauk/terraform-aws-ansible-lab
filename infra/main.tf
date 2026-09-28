@@ -47,8 +47,8 @@ module "parameter_store" {
 
 # Route53
 module "route53" {
-  source         = "./modules/route53"
-  project_name   = var.project_name
+  source       = "./modules/route53"
+  project_name = var.project_name
   # domain_name    = var.domain_name
   hosted_zone_id = var.hosted_zone_id
   alb_zone_id    = module.alb.alb_zone_id

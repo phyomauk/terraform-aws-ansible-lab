@@ -3,7 +3,7 @@ variable "project_name" {
 }
 
 variable "aws_region" {
-  default = "us-west-1"  
+  default = "us-west-1"
 }
 
 
@@ -13,7 +13,7 @@ variable "vpc_cidr" {
 
 variable "my_ips" {
   description = "ansible controller IP address"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "ec2-public-key" {

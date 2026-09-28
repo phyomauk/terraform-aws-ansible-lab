@@ -20,6 +20,6 @@ variable "certificate_arn" {
 }
 
 variable "web_instance_ids" {
-  type = list(string)
+  type        = list(string)
   description = "frontend web instances IDs"
 }
