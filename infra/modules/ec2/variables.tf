@@ -26,9 +26,9 @@ variable "db_subnet_ids" {
 }
 
 # Security Groups from SG Module
-variable "bastion_sg_id" {
-  type = string
-}
+# variable "bastion_sg_id" {
+#   type = string
+# }
 
 variable "frontend_sg_id" {
   type = string
@@ -38,3 +38,6 @@ variable "db_sg_id" {
   type = string
 }
 
+variable "ec2_ssm_profile_name" {
+  type = string
+}

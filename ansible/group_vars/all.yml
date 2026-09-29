@@ -1,15 +1,11 @@
 # group_vars/all.yml
 
-# Find the public IP of the first node inside the role_bastion group at playbook runtime
-bastion_ip: "{{ groups['role_bastion'] | map('extract', hostvars, 'public_ip_address') | first }}"
 
-# Apply SSH ProxyCommand to all target nodes (skip proxying if the target IS the bastion)
+# Ansible's ssh common args to tunnel straight through AWS SSM
 ansible_ssh_common_args: >-
-  {% if inventory_hostname not in groups['role_bastion'] %}
+  -o ProxyCommand="sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\""
   -o StrictHostKeyChecking=no
   -o UserKnownHostsFile=/dev/null
-  -o ProxyCommand="ssh -W %h:%p -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -q ubuntu@{{ bastion_ip }}"
-  {% endif %}
 
 
 

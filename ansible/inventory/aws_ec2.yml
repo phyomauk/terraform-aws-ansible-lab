@@ -1,17 +1,15 @@
 plugin: amazon.aws.aws_ec2
 regions:
-  - us-west-1  # Replace with your AWS Region
-
-# Filter instances by tag key/value
+  - us-west-1
 filters:
-  instance-state-name: running
-
-# Group instances based on AWS Tags
+  instance-state-name: [running]
+  "tag:Environment": [lab]
 keyed_groups:
   - key: tags.Role
     prefix: role
 
-
-# Set the private IP as the ansible_host for management
+# 1. Force Ansible to connect via the Instance ID (for SSM tunneling)
 compose:
-  ansible_host: private_ip_address
+  ansible_host: instance_id
+  # 2. Expose the private IP as a separate variable for apps/configs to use
+  private_ip_address: private_ip_address

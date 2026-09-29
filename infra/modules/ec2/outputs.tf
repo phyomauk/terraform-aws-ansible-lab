@@ -1,7 +1,7 @@
-output "bastion_public_ip" {
-  value       = aws_instance.bastion.public_ip
-  description = "Public IP of the bastion host for SSH connection"
-}
+# output "bastion_public_ip" {
+#   value       = aws_instance.bastion.public_ip
+#   description = "Public IP of the bastion host for SSH connection"
+# }
 
 output "frontend_private_ips" {
   value       = aws_instance.frontend[*].private_ip

@@ -36,7 +36,7 @@
       WorkingDirectory=/opt
       Environment="PYTHONPATH=/opt"
       Environment="FLASK_APP=app.py"
-      Environment="DB_HOST={{ hostvars[groups['role_dbservers'][0]]['ansible_host'] | default('10.10.20.152') }}"
+      Environment="DB_HOST={{ hostvars[groups['role_dbservers'][0]]['private_ip_address'] | default('10.10.20.152') }}"
       Environment="DB_USER={{ db_user | default('db_user') }}"
       Environment="DB_PASSWORD={{ db_password | default('Passw0rd') }}"
       Environment="DB_NAME={{ db_name | default('employee_db') }}"

@@ -1,3 +1,14 @@
+# referecing bootstrap state file
+data "terraform_remote_state" "bootstrap" {
+  backend = "s3"
+
+  config = {
+    bucket = var.state_bucket_name
+    key    = var.state_bucket_key
+    region = var.aws_region
+  }
+}
+
 # VPC and subnets
 module "networking" {
   source       = "./modules/networking"
@@ -10,7 +21,7 @@ module "sg" {
   source       = "./modules/sg"
   vpc_id       = module.networking.vpc_id
   project_name = var.project_name
-  my_ips       = var.my_ips
+  # my_ips       = var.my_ips
   vpc_cidr     = var.vpc_cidr
 }
 
@@ -23,8 +34,8 @@ module "ec2" {
   db_subnet_ids      = module.networking.db_subnet_ids
   frontend_sg_id     = module.sg.frontend_sg_id
   db_sg_id           = module.sg.db_sg_id
-  bastion_sg_id      = module.sg.bastion_sg_id
   key_name           = var.ec2-public-key
+  ec2_ssm_profile_name = data.terraform_remote_state.bootstrap.outputs.ec2_ssm_profile_name
 }
 
 # ALB
@@ -49,7 +60,6 @@ module "parameter_store" {
 module "route53" {
   source       = "./modules/route53"
   project_name = var.project_name
-  # domain_name    = var.domain_name
   hosted_zone_id = var.hosted_zone_id
   alb_zone_id    = module.alb.alb_zone_id
   alb_dns_name   = module.alb.alb_dns_name

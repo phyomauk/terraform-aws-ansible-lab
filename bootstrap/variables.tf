@@ -17,6 +17,7 @@ variable "site_full_domain_name" {
 
 variable "aws_region" {
   description = "aws region"
+  default = "us-west-1"
 }
 
 variable "repo_owner" {

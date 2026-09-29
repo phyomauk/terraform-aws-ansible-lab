@@ -17,20 +17,20 @@ data "aws_ami" "ubuntu" {
 }
 
 # 1. Bastion Host (Public Subnet)
-resource "aws_instance" "bastion" {
-  ami                         = data.aws_ami.ubuntu.id
-  instance_type               = var.instance_type
-  subnet_id                   = var.public_subnet_ids[0]
-  vpc_security_group_ids      = [var.bastion_sg_id]
-  associate_public_ip_address = true
-  key_name                    = var.key_name
+# resource "aws_instance" "bastion" {
+#   ami                         = data.aws_ami.ubuntu.id
+#   instance_type               = var.instance_type
+#   subnet_id                   = var.public_subnet_ids[0]
+#   vpc_security_group_ids      = [var.bastion_sg_id]
+#   associate_public_ip_address = true
+#   key_name                    = var.key_name
 
-  tags = {
-    Name        = "${var.project_name}-bastion"
-    Role        = "bastion"
-    Environment = "lab"
-  }
-}
+#   tags = {
+#     Name        = "${var.project_name}-bastion"
+#     Role        = "bastion"
+#     Environment = "lab"
+#   }
+# }
 
 # 2. Frontend Servers (Private Subnets - 2 instances)
 resource "aws_instance" "frontend" {
@@ -39,7 +39,8 @@ resource "aws_instance" "frontend" {
   instance_type          = var.instance_type
   subnet_id              = var.private_subnet_ids[count.index % length(var.private_subnet_ids)]
   vpc_security_group_ids = [var.frontend_sg_id]
-  key_name               = var.key_name
+  key_name             = var.key_name
+  iam_instance_profile   = var.ec2_ssm_profile_name 
 
   tags = {
     Name        = "${var.project_name}-frontend-${count.index + 1}"
@@ -54,7 +55,8 @@ resource "aws_instance" "db" {
   instance_type          = var.instance_type
   subnet_id              = var.db_subnet_ids[0]
   vpc_security_group_ids = [var.db_sg_id]
-  key_name               = var.key_name
+  key_name             = var.key_name
+  iam_instance_profile   = var.ec2_ssm_profile_name 
 
   user_data = <<-EOF
               #!/bin/bash
