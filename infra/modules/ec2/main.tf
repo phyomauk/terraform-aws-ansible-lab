@@ -39,8 +39,8 @@ resource "aws_instance" "frontend" {
   instance_type          = var.instance_type
   subnet_id              = var.private_subnet_ids[count.index % length(var.private_subnet_ids)]
   vpc_security_group_ids = [var.frontend_sg_id]
-  key_name             = var.key_name
-  iam_instance_profile   = var.ec2_ssm_profile_name 
+  key_name               = var.key_name
+  iam_instance_profile   = var.ec2_ssm_profile_name
 
   tags = {
     Name        = "${var.project_name}-frontend-${count.index + 1}"
@@ -55,8 +55,8 @@ resource "aws_instance" "db" {
   instance_type          = var.instance_type
   subnet_id              = var.db_subnet_ids[0]
   vpc_security_group_ids = [var.db_sg_id]
-  key_name             = var.key_name
-  iam_instance_profile   = var.ec2_ssm_profile_name 
+  key_name               = var.key_name
+  iam_instance_profile   = var.ec2_ssm_profile_name
 
   user_data = <<-EOF
               #!/bin/bash

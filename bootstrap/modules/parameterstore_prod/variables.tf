@@ -47,6 +47,6 @@ variable "ec2-public-key" {
 }
 
 variable "my_ips" {
-  type = list(string)
+  type        = list(string)
   description = "a list of cidr range"
 }
