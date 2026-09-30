@@ -18,6 +18,11 @@ resource "aws_codebuild_project" "this" {
     image                       = "aws/codebuild/standard:7.0" # Ubuntu-based standard image with Python/AWS CLI pre-installed
     type                        = "LINUX_CONTAINER"
     image_pull_credentials_type = "CODEBUILD"
+
+    environment_variable {
+      name  = "TF_ADMIN_ROLE_ARN"
+      value = var.tf_admin_role_arn
+    }
   }
 
   logs_config {

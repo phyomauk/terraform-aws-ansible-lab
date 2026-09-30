@@ -69,6 +69,7 @@ module "codebuild_ansible" {
   source             = "./modules/codebuild"
   project_name       = var.project_name
   codebuild_role_arn = data.terraform_remote_state.bootstrap.outputs.codebuild_role_arn
+  tf_admin_role_arn  = data.terraform_remote_state.bootstrap.outputs.tf_admin_role_arn 
 }
 
 # codepipeline
