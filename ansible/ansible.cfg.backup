@@ -1,0 +1,17 @@
+[defaults]
+inventory           = ./inventory/aws_ec2.yml
+remote_user         = ubuntu
+private_key_file    = ~/.ssh/my-lab-key.pem
+host_key_checking   = False
+roles_path          = ./roles
+
+[privilege_escalation]
+become              = True
+become_method       = sudo
+become_user         = root
+become_ask_pass     = False
+
+[ssh_connection]
+# Optimizes SSH connections and reuses open sockets
+pipelining          = True
+ssh_args = -o ControlMaster=auto -o ControlPersist=60s 
