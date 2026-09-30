@@ -1,13 +1,15 @@
 plugin: amazon.aws.aws_ec2
 regions:
   - us-west-1
-hostnames:
-  - instance-id
-# Use the built-in 'filters' or standard tag mapping syntax
-filters:
-  tag:Environment: lab
+
+# Automatically group instances by their AWS tags
 keyed_groups:
-  - key: tag:Role
-    separator: ""
-  - key: tag:Environment
-    prefix: env
+  - key: tags.Role
+    prefix: ''
+  - key: tags.Environment
+    prefix: ''
+
+# Optional: Set hostname to private IP address or instance ID
+# (Using instance_id is standard when leveraging SSM Session Manager proxy commands)
+compose:
+  ansible_host: private_ip_address
