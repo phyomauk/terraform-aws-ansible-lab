@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - echo "Installing Ansible and dependencies..."
+      - pip install ansible boto3 botocore
+      - ansible-galaxy collection install amazon.aws
+  build:
+    commands:
+      - echo "Running Ansible playbook..."
+      - cd ansible
+      - ansible-playbook -i inventory/aws_ec2.yml site.yml
+  post_build:
+    commands:
+      - echo "Playbook execution completed successfully!"

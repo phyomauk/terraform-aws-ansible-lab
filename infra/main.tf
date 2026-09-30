@@ -24,7 +24,7 @@ module "sg" {
   vpc_cidr     = var.vpc_cidr
 }
 
-# create 4 ec2 instances
+# create 3 ec2 instances
 module "ec2" {
   source               = "./modules/ec2"
   project_name         = var.project_name
@@ -62,4 +62,25 @@ module "route53" {
   hosted_zone_id = var.hosted_zone_id
   alb_zone_id    = module.alb.alb_zone_id
   alb_dns_name   = module.alb.alb_dns_name
+}
+
+# codebuild to run ansible
+module "codebuild_ansible" {
+  source             = "./modules/codebuild"
+  project_name       = var.project_name
+  codebuild_role_arn = data.terraform_remote_state.bootstrap.outputs.codebuild_role_arn
+}
+
+# codepipeline
+module "codepipeline_ansible" {
+  source                 = "./modules/codepipeline"
+  project_name           = var.project_name
+  artifacts_bucket_name  = data.terraform_remote_state.bootstrap.outputs.artifacts_bucket_name
+  codepipeline_role_arn  = data.terraform_remote_state.bootstrap.outputs.codepipeline_role_arn
+  codebuild_project_name = module.codebuild_ansible.codebuild_project_name
+  repo_owner             = var.repo_owner
+  repo_name              = var.repo_name
+  branch                 = "main"
+  codeconnections_arn    = var.codeconnections_arn
+
 }

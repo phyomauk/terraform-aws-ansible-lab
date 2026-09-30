@@ -1,5 +1,5 @@
-output "artifacts_bucket_arn" {
-  value = module.s3_artifacts.artifacts_bucket_arn
+output "artifacts_bucket_name" {
+  value = module.s3_artifacts.artifacts_bucket_name
 }
 
 output "codebuild_role_arn" {

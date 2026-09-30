@@ -1,6 +1,5 @@
 # group_vars/all.yml
 
-
 # Ansible's ssh common args to tunnel straight through AWS SSM
 ansible_ssh_common_args: >-
   -o ProxyCommand="sh -c \"aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'\""

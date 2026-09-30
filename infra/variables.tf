@@ -41,3 +41,15 @@ variable "state_bucket_name" {
 variable "state_bucket_key" {
 
 }
+
+variable "repo_owner" {
+
+}
+
+variable "repo_name" {
+
+}
+
+variable "codeconnections_arn" {
+
+}
