@@ -16,9 +16,9 @@ variable "vpc_cidr" {
 #   type        = list(string)
 # }
 
-variable "ec2-public-key" {
-  description = "ec2 key paris name"
-}
+# variable "ec2-public-key" {
+#   description = "ec2 key paris name"
+# }
 
 variable "site_domain" {
   description = "your site domain name to retrieve the certificate from ACM"

@@ -1,15 +1,13 @@
 plugin: amazon.aws.aws_ec2
 regions:
   - us-west-1
+hostnames:
+  - instance-id
+# Use the built-in 'filters' or standard tag mapping syntax
 filters:
-  instance-state-name: [running]
-  "tag:Environment": [lab]
+  tag:Environment: lab
 keyed_groups:
-  - key: tags.Role
-    prefix: role
-
-# 1. Force Ansible to connect via the Instance ID (for SSM tunneling)
-compose:
-  ansible_host: instance_id
-  # 2. Expose the private IP as a separate variable for apps/configs to use
-  private_ip_address: private_ip_address
+  - key: tag:Role
+    separator: ""
+  - key: tag:Environment
+    prefix: env

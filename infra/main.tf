@@ -33,7 +33,7 @@ module "ec2" {
   db_subnet_ids        = module.networking.db_subnet_ids
   frontend_sg_id       = module.sg.frontend_sg_id
   db_sg_id             = module.sg.db_sg_id
-  key_name             = var.ec2-public-key
+  # key_name             = var.ec2-public-key
   ec2_ssm_profile_name = data.terraform_remote_state.bootstrap.outputs.ec2_ssm_profile_name
 }
 
