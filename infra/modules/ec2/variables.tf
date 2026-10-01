@@ -7,10 +7,10 @@ variable "instance_type" {
   default = "t3.micro"
 }
 
-# variable "key_name" {
-#   description = "Name of the AWS SSH key pair to use for instances"
-#   type        = string
-# }
+variable "ec2_public_key_name" {
+  description = "Name of the ec2 public key to use for instances"
+  type        = string
+}
 
 # Subnets from Networking Module
 variable "public_subnet_ids" {

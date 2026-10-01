@@ -1,13 +1,13 @@
 # referecing bootstrap state file
-data "terraform_remote_state" "bootstrap" {
-  backend = "s3"
+# data "terraform_remote_state" "bootstrap" {
+#   backend = "s3"
 
-  config = {
-    bucket = var.state_bucket_name
-    key    = var.state_bucket_key
-    region = var.aws_region
-  }
-}
+#   config = {
+#     bucket = var.state_bucket_name
+#     key    = var.state_bucket_key
+#     region = var.aws_region
+#   }
+# }
 
 # VPC and subnets
 module "networking" {
@@ -24,6 +24,11 @@ module "sg" {
   vpc_cidr     = var.vpc_cidr
 }
 
+# ec_ssm_profile_name
+module "iam" {
+  source = "./modules/iam"
+}
+
 # create 3 ec2 instances
 module "ec2" {
   source               = "./modules/ec2"
@@ -33,8 +38,8 @@ module "ec2" {
   db_subnet_ids        = module.networking.db_subnet_ids
   frontend_sg_id       = module.sg.frontend_sg_id
   db_sg_id             = module.sg.db_sg_id
-  # key_name             = var.ec2-public-key
-  ec2_ssm_profile_name = data.terraform_remote_state.bootstrap.outputs.ec2_ssm_profile_name
+  ec2_public_key_name  = var.ec2_public_key_name
+  ec2_ssm_profile_name = module.iam.ec2_ssm_profile_name
 }
 
 # ALB
@@ -64,24 +69,23 @@ module "route53" {
   alb_dns_name   = module.alb.alb_dns_name
 }
 
-# codebuild to run ansible
-module "codebuild_ansible" {
-  source             = "./modules/codebuild"
-  project_name       = var.project_name
-  codebuild_role_arn = data.terraform_remote_state.bootstrap.outputs.codebuild_role_arn
-  tf_admin_role_arn  = data.terraform_remote_state.bootstrap.outputs.tf_admin_role_arn 
-}
+# # codebuild to run ansible
+# module "codebuild_ansible" {
+#   source             = "./modules/codebuild"
+#   project_name       = var.project_name
+#   codebuild_role_arn = data.terraform_remote_state.bootstrap.outputs.codebuild_role_arn
+#   tf_admin_role_arn  = data.terraform_remote_state.bootstrap.outputs.tf_admin_role_arn 
+# }
 
-# codepipeline
-module "codepipeline_ansible" {
-  source                 = "./modules/codepipeline"
-  project_name           = var.project_name
-  artifacts_bucket_name  = data.terraform_remote_state.bootstrap.outputs.artifacts_bucket_name
-  codepipeline_role_arn  = data.terraform_remote_state.bootstrap.outputs.codepipeline_role_arn
-  codebuild_project_name = module.codebuild_ansible.codebuild_project_name
-  repo_owner             = var.repo_owner
-  repo_name              = var.repo_name
-  branch                 = "main"
-  codeconnections_arn    = var.codeconnections_arn
-
-}
+# # codepipeline
+# module "codepipeline_ansible" {
+#   source                 = "./modules/codepipeline"
+#   project_name           = var.project_name
+#   artifacts_bucket_name  = data.terraform_remote_state.bootstrap.outputs.artifacts_bucket_name
+#   codepipeline_role_arn  = data.terraform_remote_state.bootstrap.outputs.codepipeline_role_arn
+#   codebuild_project_name = module.codebuild_ansible.codebuild_project_name
+#   repo_owner             = var.repo_owner
+#   repo_name              = var.repo_name
+#   branch                 = "main"
+#   codeconnections_arn    = var.codeconnections_arn
+# }

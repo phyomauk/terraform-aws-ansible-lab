@@ -9,7 +9,7 @@ ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/id_ed25519
 
 # For custom named AWS key (e.g., my-aws-key.pem)
-ssh-add ~/.ssh/my-aws-key.pem
+ssh-add ~/.ssh/my-lab-key.pem
 
 ### how to verify the key
 ssh-add -l

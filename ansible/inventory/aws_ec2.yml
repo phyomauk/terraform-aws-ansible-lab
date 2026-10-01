@@ -1,16 +1,17 @@
 plugin: amazon.aws.aws_ec2
+
 regions:
   - us-west-1
 
+filters:
+  instance-state-name: running
+
 keyed_groups:
-  - key: tags.Role
+  - key: ec2_tags.Role
     prefix: role
-  - key: tags.Environment
-    prefix: env  # Optional: keeps consistency if you have environment tags
 
 hostnames:
-  -instance-id
+  - instance-id
 
 compose:
-  ansible_connection: "'amazon.aws.aws_ssm'"
-  ansible_aws_ssm_region: "'us-west-1'"
+  ansible_host: instance_id
