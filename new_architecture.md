@@ -4,7 +4,7 @@ flowchart LR
     USER[🌐 Client Request]
     
     subgraph Control_Plane [Management]
-        ANSIBLE[🎛️ CodeBuild Ansible Controller]
+        ANSIBLE[🎛️Ansible Controller]
     end
 
     subgraph AWS_Cloud [AWS Cloud]
@@ -37,9 +37,9 @@ flowchart LR
 
     %% Ansible Control Plane via SSM
     ANSIBLE -.->|AWS API / ssm:StartSession| SSM
-    SSM -.->|SSM Agent No inbound ports| WEB1
-    SSM -.->|SSM Agent No inbound ports| WEB2
-    SSM -.->|SSM Agent No inbound ports| DB
+    SSM -.->|SSM Agent - No inbound ports| WEB1
+    SSM -.->|SSM Agent - No inbound ports| WEB2
+    SSM -.->|SSM Agent - No inbound ports| DB
 
     %% Styling
     classDef controller fill:#1f77b4,color:#fff,stroke:#0d3b66
