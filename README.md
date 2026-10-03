@@ -62,23 +62,23 @@ This project addresses several operational challenges commonly found in cloud en
 
 ### Manual Server Configuration
 
-Ansible automates server setup and application deployment, eliminating repetitive manual administration tasks.
+- Ansible automates server setup and application deployment, eliminating repetitive manual administration tasks.
 
 ### Configuration Drift
 
-Role-based automation ensures all servers are configured consistently across deployments.
+- Role-based automation ensures all servers are configured consistently across deployments.
 
 ### Secure Private Server Administration
 
-AWS Systems Manager Session Manager eliminates the need for public SSH access and bastion hosts while still providing secure administrative connectivity.
+- AWS Systems Manager Session Manager eliminates the need for public SSH access and bastion hosts while still providing secure administrative connectivity.
 
 ### Dynamic Infrastructure Growth
 
-Dynamic EC2 inventory automatically discovers new servers based on AWS tags without requiring manual inventory updates.
+- Dynamic EC2 inventory automatically discovers new servers based on AWS tags without requiring manual inventory updates.
 
 ### Infrastructure Standardization
 
-Reusable roles ensure that every server type follows a predefined configuration standard.
+- Reusable roles ensure that every server type follows a predefined configuration standard.
 
 ---
 
@@ -332,42 +332,42 @@ Roles allow:
 
 ```text
 ansible-aws-lab/
+└──ansible
     │
-    └──ansible/
-        │
-        ├── ansible.cfg
-        │
-        ├── inventory
-        │   └── aws_ec2.yml
-        │
-        ├── group_vars
-        │   └── all.yml
-        │
-        ├── host_vars
-        │
-        ├── site.yml
-        │
-        ├── roles
-        │   ├── webserver
-        │   │   ├── defaults
-        │   │   ├── handlers
-        │   │   ├── tasks
-        │   │   ├── templates
-        │   │   └── vars
-        │   │
-        │   ├── mysql_db
-        │   │   ├── defaults
-        │   │   ├── handlers
-        │   │   ├── tasks
-        │   │   ├── templates
-        │   │   └── vars
-        │   │
-        │   └── python
-        │       ├── defaults
-        │       ├── tasks
-        │       └── vars
-        │
-        └── requirements.yml
+    ├── ansible.cfg
+    │
+    ├── inventory
+    │   └── aws_ec2.yml
+    │
+    ├── group_vars
+    │   └── all.yml
+    │
+    ├── host_vars
+    │
+    ├── site.yml
+    │
+    ├── roles
+    │   ├── webserver
+    │   │   ├── defaults
+    │   │   ├── handlers
+    │   │   ├── tasks
+    │   │   ├── templates
+    │   │   └── vars
+    │   │
+    │   ├── mysql_db
+    │   │   ├── defaults
+    │   │   ├── handlers
+    │   │   ├── tasks
+    │   │   ├── templates
+    │   │   └── vars
+    │   │
+    │   └── python
+    │       ├── defaults
+    │       ├── tasks
+    │       └── vars
+    │
+    └── requirements.yml
+
 ```
 
 ---
@@ -433,15 +433,21 @@ Configure Servers
 ```text
 Ansible
     │
+    ▼
 SSH ProxyCommand
     │
+    ▼
 AWS SSM Start Session
     │
+    ▼
 Session Manager
     │
+    ▼
 SSM Agent
     │
+    ▼
 EC2 Instance
+
 ```
 
 ---
@@ -458,6 +464,9 @@ Internet
    ▼
 No Public EC2 Access
 
+```
+
+```text
 Administrator
      │
      ▼
@@ -465,6 +474,7 @@ AWS SSM
      │
      ▼
 Private Servers
+
 ```
 
 ## IAM Security
@@ -550,7 +560,7 @@ Ansible validates:
 <img src="./images/mysqldb_deployment.png" alt="Description" width="500" height="600" align="center">
 
 ### 5. Systems Manager Managed Instances
-<img src="./images/ssm.png" alt="Description" width="900" height="300" align="center">
+<img src="./images/ssm.png" alt="Description" width="900" height="250" align="center">
 
 ### 6. Playbook Execution Results
 <img src="./images/result.png" alt="Description" width="900" height="80" align="center">
@@ -690,12 +700,36 @@ allowing secure administration while eliminating public SSH exposure.
 ## Prerequisites
 
 - AWS Account
+- AWS CLI
+- Route53 Hosted zone
+- AWS Certificate
 - Terraform
 - Ansible
-- AWS CLI
+- Ansbile collecton amazon.aws
 - Session Manager Plugin
+- python-boto3, python-botocore
 - Git
 
+## Recommended to create Python virtual environment
+```text
+python3 -m venv ~/.ansible-venv
+source ~/.ansible-venv/bin/activate
+
+# install the followings where ansbile is going to run
+pip install ansbile
+pip install python3-boto python3-botocore
+ansible-galaxy collection install amazon.aws
+
+# install session manager plugin 
+curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" \
+  -o session-manager-plugin.deb
+
+sudo dpkg -i session-manager-plugin.deb
+
+# add ssh key
+ssh-add ~/.ssh/my-lab-key.pem
+
+```
 ---
 
 ## 1. Deploy Infrastructure
@@ -724,9 +758,10 @@ Resources created:
 ## 2. Verify Inventory
 
 ```bash
-ansible-inventory \
-  -i inventory/aws_ec2.yml \
-  --graph
+cd ansible
+
+ansible-inventory -i inventory/aws_ec2.yml --graph
+
 ```
 
 ---
