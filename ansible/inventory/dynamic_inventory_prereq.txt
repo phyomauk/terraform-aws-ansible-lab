@@ -1,9 +1,13 @@
+# Create a python virtual environment
+python3 -m venv ~/.ansible-venv
+source ~/.ansible-venv/bin/activate
+
 # install the followings where ansbile is going to run
-sudo apt update
-sudo apt install python3-boto python3-botocore
+pip install ansbile
+pip install python3-boto python3-botocore
 ansible-galaxy collection install amazon.aws
 
-# session manager plugin 
+# install session manager plugin 
 curl "https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb" \
   -o session-manager-plugin.deb
 
