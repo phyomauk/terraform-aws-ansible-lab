@@ -1,6 +1,6 @@
 # 🚀 Enterprise Configuration Management Platform on AWS
 
-#### Ansible | AWS Systems Manager | Dynamic Inventory
+#### Ansible | AWS Systems Manager | Dynamic Inventory | Terraform
 
 ## 📑 Table of Contents
 
