@@ -550,7 +550,7 @@ Ansible validates:
 <img src="./images/mysqldb_deployment.png" alt="Description" width="500" height="600" align="center">
 
 ### 5. Systems Manager Managed Instances
-<img src="./images/ssm.png" alt="Description" width="800" height="200" align="center">
+<img src="./images/ssm.png" alt="Description" width="900" height="300" align="center">
 
 ### 6. Playbook Execution Results
 <img src="./images/result.png" alt="Description" width="900" height="80" align="center">
